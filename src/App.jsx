@@ -3,7 +3,6 @@ import { fabric } from 'fabric'
 import './App.scss'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [url, setUrl] = useState("")
 
   const ref = useRef(null)
@@ -21,12 +20,13 @@ function App() {
       // oImg.scaleToHeight(canvas.height);
       canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas));
       canvas.renderAll();
+      // canvas.requestRenderAll()
     }, 
     {
       crossOrigin: 'Anonymous'});
 
     fabric.Image.fromURL('t1.png', function (oImg) {
-      canvas.add(oImg)
+      canvas.add(oImg).renderAll();
     }, {
       crossOrigin: 'Anonymous'
     
@@ -45,34 +45,44 @@ function App() {
     // 使用fabric.js监听画布改变 重新渲染
     canvas.on('object:added', function(event) {
       console.log('Object added:', event.target);
-      // ref.current.renderAll();
+      ref.current.renderAll();
+      // ref.current.requestRenderAll();
     });
     
     canvas.on('object:removed', function(event) {
       console.log('Object removed:', event.target);
       // ref.current.renderAll();
+      // ref.current.requestRenderAll();
     });
     
     canvas.on('object:modified', function(event) {
       console.log('Object modified:', event.target);
       // ref.current.renderAll();
+      // const base64 = ref.current.toDataURL({
+      //   format: 'png',
+      //   quality: 1
+      // });
+      // setUrl(base64)
+      // ref.current.renderAll();
+      // ref.current.requestRenderAll();
     });
     
     // canvas.on('object:moving', function(event) {
     //   console.log('Object moving:', event.target);
     // });
     
-    canvas.on('object:scaling', function(event) {
-      console.log('Object scaling:', event.target);
-      // ref.current.renderAll();
-    });
+    // canvas.on('object:scaling', function(event) {
+    //   console.log('Object scaling:', event.target);
+    //   ref.current.renderAll();
+    //   // ref.current.requestRenderAll();
+    // });
     
-    canvas.on('object:rotating', function(event) {
-      console.log('Object rotating:', event.target);
-      // ref.current.renderAll();
-    });
+    // canvas.on('object:rotating', function(event) {
+    //   console.log('Object rotating:', event.target);
+    //   ref.current.requestRenderAll();
+    // });
 
-  }, [])
+  }, [setUrl])
   const base64ToBlob = (base64) => {
     const parts = base64.split(';base64,');
     const contentType = parts[0].split(':')[1];
@@ -107,10 +117,7 @@ function App() {
       quality: 1
     }));
     // ref.current.renderAll();
-    setUrl(ref.current.toDataURL({
-      format: 'png',
-      quality: 1
-    }))
+    setUrl(base64)
     // ref.current.toBlob(function(blob) {
     //   const url = URL.createObjectURL(blob);
     //   const a = document.createElement('a');
@@ -120,9 +127,18 @@ function App() {
     //   URL.revokeObjectURL(url);
     // });
   }
+  const exportJson = () => {
+    const json = ref.current.toJSON();
+    // 通过json渲染画布
+    ref.current.clear();
+    ref.current.loadFromJSON(json, function() {
+      // ref.current.renderAll();
+    });
+  }
   return (
     <div className='app'>
       <button onClick={exportImage}>点击</button>
+      <button onClick={exportJson}>导出json</button>
        <div className='head'>
           <div className='headleft'>asd</div>
           <div className='headright'>
@@ -137,3 +153,4 @@ function App() {
 }
 
 export default App
+

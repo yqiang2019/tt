@@ -1,0 +1,36 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.drag {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  .fix {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    // background-color: red;
+    display: flex;
+    .fixLeft {
+      width: 200px;
+      height: 100%;
+      background-color: blue;
+    }
+    .fixRight {
+      width: 200px;
+      height: 100%;
+      background-color: green;
+    }
+  }
+}
+.editArea {
+  height: 500px;
+}
+.wf {
+  height: 90vh;
+}
